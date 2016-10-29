@@ -1,0 +1,33 @@
+<web-app xmlx="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+         version="2.4">
+
+    <servlet>
+        <servlet-name>Ch3 Beer</servlet-name>
+        <servlet-class>com.example.web.BeerSelect</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>Beer Servlet</servlet-name>
+        <servlet-class>com.example.web.Beer</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Get INF</servlet-name>
+        <servlet-class>com.example.web.GetINF</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Ch3 Beer</servlet-name>
+        <url-pattern>/SelectBeer.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Beer Servlet</servlet-name>
+        <url-pattern>/BeerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Get Inf</servlet-name>
+        <url-pattern>/SelectBeer.do</url-pattern>
+    </servlet-mapping>
+</web-app>

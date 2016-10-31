@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MVCDemo.iml" filepath="$PROJECT_DIR$/MVCDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dbaDemo/dbaDemo.iml" filepath="$PROJECT_DIR$/dbaDemo/dbaDemo.iml" />
     </modules>
   </component>
 </project>

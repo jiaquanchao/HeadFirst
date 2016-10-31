@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="dbaDemo:war">
+    <output-path>$PROJECT_DIR$/dbaDemo/target</output-path>
+    <root id="archive" name="dbaDemo-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="dbaDemo:war exploded" />
+    </root>
+  </artifact>
+</component>

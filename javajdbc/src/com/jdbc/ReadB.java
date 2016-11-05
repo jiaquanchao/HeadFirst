@@ -41,16 +41,17 @@ public class ReadB {
         writer.close();
     }
 
-    public void readB(Blob blobT, Blob blobA, File file) throws Exception {
+    public void readB(Long resultId, Blob blobT, Blob blobA, File file) throws Exception {
         InputStream inputStreamT = blobT.getBinaryStream();
         InputStream inputStreamA = blobA.getBinaryStream();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(file));
+        Writer writer = new OutputStreamWriter(new FileOutputStream(file, true));
+//        writer.write("ResultId,ProcessTorque,ProcessAngle\n");
         byte[] bytesT = new byte[4];
         byte[] bytesA = new byte[4];
         while ((inputStreamT.read(bytesT) != -1) && (inputStreamA.read(bytesA) != -1)) {
             float ftemp = ReadB.byte2float(bytesT, 0);
             float atemp = ReadB.byte2float(bytesA, 0);
-            writer.write(String.valueOf(ftemp) + "," + String.valueOf(atemp) + "\n");
+            writer.write(String.valueOf(resultId)+","+String.valueOf(ftemp) + "," + String.valueOf(atemp) + "\n");
         }
         inputStreamT.close();
         inputStreamA.close();

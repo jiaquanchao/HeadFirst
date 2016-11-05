@@ -15,7 +15,12 @@ public class ReadBlob {
 
         ReadB readB = (ReadB) Class.forName("com.jdbc.ReadB").newInstance();
         String filePath = "D:\\WCData\\ReadBlob\\";
-        String sql = "SELECT * FROM UNIT16574G";
+        String sql = "SELECT a.ResultID,a.UnitID,a.ResultType,a.ProcessTorque,g.\"GraphValues\"ProcessAngle\n" +
+                "FROM (SELECT  r.\"ID\"ResultID,u.\"ID\"UnitID,r.\"ResultStatusTypeID\"ResultType,g.\"GraphValues\"ProcessTorque\n" +
+                "FROM \"Result\"  r JOIN  \"Unit\" u ON r.\"UnitID\" = u.ID\n" +
+                "  JOIN \"Graph\"  g ON  r.ID= g.\"ResultID\"\n" +
+                "WHERE r.\"UnitID\"=16506 AND r.\"ResultStatusTypeID\"='0 'AND g.\"GraphTypeID\"= -1)a JOIN \"Graph\" g ON  a.ResultID= g.\"ResultID\"\n" +
+                "  WHERE g.\"GraphTypeID\"= -2 ";
         Connection conn = null;
         Statement stat = null;
         ResultSet rs = null;
@@ -25,13 +30,13 @@ public class ReadBlob {
             stat = conn.createStatement();
             rs = stat.executeQuery(sql);
 
+            File file = new File(filePath+"16506_OK.csv");
             while (rs.next()) {
-                long resultId = rs.getLong(1);
-                int unitId = rs.getInt(2);
-                Blob ftP = rs.getBlob(12);
-                Blob faP = rs.getBlob(13);
-                File file = new File(filePath+unitId+"_"+resultId + ".csv");
-                readB.readB(ftP, faP, file);
+                long resultId = rs.getLong("ResultId");
+                int unitId = rs.getInt("UnitId");
+                Blob ftP = rs.getBlob("ProcessTorque");
+                Blob faP = rs.getBlob("ProcessAngle");
+                readB.readB(resultId, ftP, faP, file);
             }
         } catch (Exception e) {
             e.printStackTrace();

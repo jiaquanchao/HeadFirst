@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.io.InputStream;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -101,10 +103,10 @@ public class JDBCTools {
 //            statement = connection.createStatement();
 //            statement.executeUpdate(sql);
             preparedStatement = connection.prepareStatement(sql);
-            String printInfo = null;
+            String printInfo = new String("");
             for (int i = 0; i<args.length; i++){
                 preparedStatement.setObject(i+1, args[i]);
-                printInfo += String.valueOf(args[i])+" —— ";
+//                printInfo += String.valueOf(args[i])+" —— ";
             }
             preparedStatement.executeUpdate();
             System.out.println("插入数据\n"+printInfo+"\n成功...");
@@ -120,52 +122,131 @@ public class JDBCTools {
     public static Student findByPhoneNumber(String phoneNumber) {
         Student student = null;
 
-//        String sql = "SELECT * FROM UT WHERE \"PHONENUMBER\" = '"+phoneNumber+"'";
         String sql = "SELECT * FROM UT WHERE \"PHONENUMBER\" = ?";
         System.out.println(sql);
-        student = findByColumns(sql, phoneNumber);
+        System.out.println(phoneNumber);
+        student = findByColumns(Student.class, sql, phoneNumber);
 
         return student;
     }
 
     public static Student findByName(String name) {
         Student student = null;
-//        String sql = "SELECT * FROM UT WHERE \"NAME\" = '"+name+"'";
-//        "SELECT * FROM UT WHERE \"NAME\" = 'Jax'";
+
         String sql = "SELECT * FROM UT WHERE \"NAME\" = ?";
         System.out.println(sql);
-        student = findByColumns(sql, name);
+        student = findByColumns(Student.class, sql, name);
 
         return student;
     }
 
-    public static Student findByColumns(String sql, Object ... args) {
-        Student student = new Student();
+    @Test
+    public void testResultSetMetaData() {
+
         Connection connection = null;
-//        Statement statement = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "SELECT Id id, Name name, PhoneNumber phoneNumber FROM UT WHERE id = ?";
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setObject(1, 2);
+            System.out.println(preparedStatement.toString());
+            rs = preparedStatement.executeQuery();
+            ResultSetMetaData resultSetMetaData = rs.getMetaData();
+
+            Map<String, Object> map = new HashMap<String, Object>();
+            while (rs.next()) {
+                for (int i = 0; i < resultSetMetaData.getColumnCount(); i++) {
+                    String columnLabel = resultSetMetaData.getColumnLabel(i + 1);
+                    Object object = rs.getObject(columnLabel);
+                    map.put(columnLabel, object);
+                }
+            }
+            Class clazz = Student.class;
+            Object object = clazz.newInstance();
+            for (Map.Entry<String, Object> tempMap : map.entrySet()) {
+                ReflectionUtils.setFieldValue(object, tempMap.getKey(), tempMap.getValue().toString());
+            }
+            System.out.println(object);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            release(rs,preparedStatement, connection);
+        }
+    }
+
+
+    /**
+     * 使用Object
+     * @param sql
+     * @param args
+     * @return
+     */
+    public static <T> T findByColumns(Class<T> clazz, String sql, Object ... args) {
+
+        T entity = null;
+        Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
 
         try {
             connection = getConnection();
-//            statement = connection.createStatement();
-//            rs = statement.executeQuery(sql);
             preparedStatement = connection.prepareStatement(sql);
             for (int i = 0; i< args.length; i++) {
                 preparedStatement.setObject(i+1, args[i]);
             }
             rs = preparedStatement.executeQuery();
-            if (rs.next()) {
-                student.setId(Long.parseLong(rs.getString("Id")));
-                student.setName(rs.getString("Name"));
-                student.setphoneNumber(rs.getString("PhoneNumber"));
+            Map<String, Object> map = new HashMap<String, Object>();
+            while (rs.next()) {
+                for (int i = 0; i<rs.getMetaData().getColumnCount(); i ++) {
+                    String columLabel = rs.getMetaData().getColumnLabel(i+1);
+                    Object value = rs.getObject(columLabel);
+                    map.put(columLabel, value);
+                }
+            }
+            entity = clazz.newInstance();
+            for (Map.Entry<String, Object> et : map.entrySet()) {
+                ReflectionUtils.setFieldValue(entity, et.getKey(), et.getValue().toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             release(rs,preparedStatement, connection);
         }
-        return student;
+        return entity;
     }
+    /**
+     * OlderVersion
+     */
+//    public static Student findByColumns(String sql, Object ... args) {
+//        Student student = new Student();
+//        Connection connection = null;
+////        Statement statement = null;
+//        PreparedStatement preparedStatement = null;
+//        ResultSet rs = null;
+//
+//        try {
+//            connection = getConnection();
+////            statement = connection.createStatement();
+////            rs = statement.executeQuery(sql);
+//            preparedStatement = connection.prepareStatement(sql);
+//            for (int i = 0; i< args.length; i++) {
+//                preparedStatement.setObject(i+1, args[i]);
+//            }
+//            rs = preparedStatement.executeQuery();
+//            if (rs.next()) {
+//                student.setId(Long.parseLong(rs.getString("Id")));
+//                student.setName(rs.getString("Name"));
+//                student.setphoneNumber(rs.getString("PhoneNumber"));
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            release(rs,preparedStatement, connection);
+//        }
+//        return student;
+//    }
 
 }

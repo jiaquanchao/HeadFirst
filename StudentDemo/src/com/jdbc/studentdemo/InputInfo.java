@@ -11,15 +11,15 @@ public class InputInfo {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("请输入学号： ");
-        student.setId(scanner.nextLong());
+        student.setID(scanner.next());
         System.out.println("请输入姓名： ");
-        student.setName(scanner.next());
+        student.setNAME(scanner.next());
         System.out.println("请输入电话： ");
-        student.setphoneNumber(scanner.next());
+        student.setPHONENUMBER(scanner.next());
 
         String sql = "INSERT INTO UT VALUES (?,?,?)";
-        JDBCTools.updateStudentInfo(sql, student.getId(),
-                student.getName(),
-                student.getphoneNumber());
+        JDBCTools.updateStudentInfo(sql, student.getID(),
+                student.getNAME(),
+                student.getPHONENUMBER());
     }
 }

@@ -5,43 +5,43 @@ package com.jdbc.studentdemo;
  */
 public class Student {
 
-    private long id;
+    private String ID;
 
-    private String name;
+    private String NAME;
 
-    private String phoneNumber;
+    private String PHONENUMBER;
 
     @Override
     public String toString() {
         return "Student{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", phoneNumber=" + phoneNumber +
+                "ID=" + ID +
+                ", NAME='" + NAME + '\'' +
+                ", PHONENUMBER=" + PHONENUMBER +
                 '}';
     }
 
-    public long getId() {
-        return id;
+    public String getID() {
+        return ID;
     }
 
-    public String getphoneNumber() {
-        return phoneNumber;
+    public String getPHONENUMBER() {
+        return PHONENUMBER;
     }
 
-    public String getName() {
-        return name;
+    public String getNAME() {
+        return NAME;
     }
 
-    public void setphoneNumber(String phoneNumber) {
+    public void setPHONENUMBER(String PHONENUMBER) {
 
-        this.phoneNumber = phoneNumber;
+        this.PHONENUMBER = PHONENUMBER;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNAME(String NAME) {
+        this.NAME = NAME;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setID(String ID) {
+        this.ID = ID;
     }
 }

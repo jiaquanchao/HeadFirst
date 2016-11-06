@@ -17,6 +17,9 @@ public class InputInfo {
         System.out.println("请输入电话： ");
         student.setphoneNumber(scanner.next());
 
-        JDBCTools.updateStudentInfo(student);
+        String sql = "INSERT INTO UT VALUES (?,?,?)";
+        JDBCTools.updateStudentInfo(sql, student.getId(),
+                student.getName(),
+                student.getphoneNumber());
     }
 }

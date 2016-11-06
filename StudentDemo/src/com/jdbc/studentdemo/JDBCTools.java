@@ -3,10 +3,7 @@ package com.jdbc.studentdemo;
 import org.junit.Test;
 
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Properties;
 
 /**
@@ -81,30 +78,40 @@ public class JDBCTools {
     /**
      * 插入学生信息：
      * 使用 Statement 方法，该方法能够处理 sql 语句。
-     * @param student
+     * @param args
+     * @param sql
      */
-    public static void updateStudentInfo(Student student) throws Exception{
+    public static void updateStudentInfo(String sql, Object ... args) throws Exception{
         Connection connection = null;
-        Statement statement = null;
+//        Statement statement = null;
+        PreparedStatement preparedStatement = null;
+
 
         /*
         写 sql 语句
          */
-        String sql = "INSERT INTO UT VALUES (" +
-                student.getId()+",'"+
-                student.getName()+"','"+
-                student.getphoneNumber()+"')";
+//        String sql = "INSERT INTO UT VALUES (" +
+//                student.getId()+",'"+
+//                student.getName()+"','"+
+//                student.getphoneNumber()+"')";
+//        String sql = "INSERT INTO UT VALUES (?,?,?)";
         System.out.println(sql);
         try {
             connection = getConnection();
-            statement = connection.createStatement();
-
-            statement.executeUpdate(sql);
-            System.out.println("插入数据\n"+student.toString()+"\n成功...");
+//            statement = connection.createStatement();
+//            statement.executeUpdate(sql);
+            preparedStatement = connection.prepareStatement(sql);
+            String printInfo = null;
+            for (int i = 0; i<args.length; i++){
+                preparedStatement.setObject(i+1, args[i]);
+                printInfo += String.valueOf(args[i])+" —— ";
+            }
+            preparedStatement.executeUpdate();
+            System.out.println("插入数据\n"+printInfo+"\n成功...");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            release(null, statement, connection);
+            release(null, preparedStatement, connection);
             System.out.println("System close...");
         }
 
@@ -113,33 +120,41 @@ public class JDBCTools {
     public static Student findByPhoneNumber(String phoneNumber) {
         Student student = null;
 
-        String sql = "SELECT * FROM UT WHERE \"PHONENUMBER\" = '"+phoneNumber+"'";
+//        String sql = "SELECT * FROM UT WHERE \"PHONENUMBER\" = '"+phoneNumber+"'";
+        String sql = "SELECT * FROM UT WHERE \"PHONENUMBER\" = ?";
         System.out.println(sql);
-        student = findByColumns(sql);
+        student = findByColumns(sql, phoneNumber);
 
         return student;
     }
 
     public static Student findByName(String name) {
         Student student = null;
-        String sql = "SELECT * FROM UT WHERE \"NAME\" = '"+name+"'";
+//        String sql = "SELECT * FROM UT WHERE \"NAME\" = '"+name+"'";
 //        "SELECT * FROM UT WHERE \"NAME\" = 'Jax'";
+        String sql = "SELECT * FROM UT WHERE \"NAME\" = ?";
         System.out.println(sql);
-        student = findByColumns(sql);
+        student = findByColumns(sql, name);
 
         return student;
     }
 
-    public static Student findByColumns(String sql) {
+    public static Student findByColumns(String sql, Object ... args) {
         Student student = new Student();
         Connection connection = null;
-        Statement statement = null;
+//        Statement statement = null;
+        PreparedStatement preparedStatement = null;
         ResultSet rs = null;
 
         try {
             connection = getConnection();
-            statement = connection.createStatement();
-            rs = statement.executeQuery(sql);
+//            statement = connection.createStatement();
+//            rs = statement.executeQuery(sql);
+            preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i< args.length; i++) {
+                preparedStatement.setObject(i+1, args[i]);
+            }
+            rs = preparedStatement.executeQuery();
             if (rs.next()) {
                 student.setId(Long.parseLong(rs.getString("Id")));
                 student.setName(rs.getString("Name"));
@@ -148,7 +163,7 @@ public class JDBCTools {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            release(rs, statement, connection);
+            release(rs,preparedStatement, connection);
         }
         return student;
     }

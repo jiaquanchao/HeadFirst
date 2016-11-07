@@ -12,14 +12,15 @@ public class Operation {
 
     public static void operation() throws Exception {
 
-        Student student = null;
+//        Student student = new Student();
         Scanner scanner = new Scanner(System.in);
         int operationType = StudentConsole.getOperationTypeFromConsole();
 
         if (operationType == 1) {
             InputInfo.inputInfo();
         } else {
-            student = FindInfo.findInfo();
+            Student student = FindInfo.findInfo();
+            System.out.println(student);
             System.out.println("loading ...");
             if (student!=null) {
                 System.out.println(student.toString()+"\n是否继续查询？ Y/N");

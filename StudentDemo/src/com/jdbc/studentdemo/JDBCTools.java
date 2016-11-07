@@ -1,12 +1,11 @@
 package com.jdbc.studentdemo;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.junit.Test;
 
 import java.io.InputStream;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by Jax on 2016/11/5.
@@ -119,15 +118,20 @@ public class JDBCTools {
 
     }
 
-    public static Student findByPhoneNumber(String phoneNumber) {
-        Student student = null;
+//    public static Student findByPhoneNumber(String phoneNumber) {
+    public static List<Student> findByPhoneNumbers(String phoneNumber) {
+//        Student student = null;
+        List<Student> studentList = null;
 
-        String sql = "SELECT * FROM UT WHERE \"PHONENUMBER\" = ?";
+
+        String sql = "SELECT * FROM UT WHERE PHONENUMBER = ?";
         System.out.println(sql);
         System.out.println(phoneNumber);
-        student = findByColumns(Student.class, sql, phoneNumber);
+//        student = findByColumns(Student.class, sql, phoneNumber);
 
-        return student;
+        studentList = findColumns(Student.class, sql, phoneNumber);
+        System.out.println(studentList);
+        return studentList;
     }
 
     public static Student findByName(String name) {
@@ -137,9 +141,21 @@ public class JDBCTools {
         System.out.println(sql);
         student = findByColumns(Student.class, sql, name);
 
+        System.out.println(student);
         return student;
     }
 
+
+    public static List<Student> findByNames(String name) {
+        List<Student> studentList = new ArrayList<>();
+
+        String sql = "SELECT * FROM UT WHERE \"NAME\" = ?";
+        System.out.println(sql);
+        studentList = findColumns(Student.class, sql, name);
+
+        System.out.println(studentList);
+        return studentList;
+    }
     @Test
     public void testResultSetMetaData() {
 
@@ -208,7 +224,8 @@ public class JDBCTools {
             }
             entity = clazz.newInstance();
             for (Map.Entry<String, Object> et : map.entrySet()) {
-                ReflectionUtils.setFieldValue(entity, et.getKey(), et.getValue().toString());
+//                ReflectionUtils.setFieldValue(entity, et.getKey(), et.getValue().toString());
+                BeanUtils.setProperty(entity, et.getKey(), et.getValue());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -217,6 +234,59 @@ public class JDBCTools {
         }
         return entity;
     }
+
+
+    /**
+     * 返回多条记录，List
+     * @param clazz
+     * @param sql
+     * @param args
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> findColumns(Class<T> clazz, String sql, Object ... args) {
+
+        List<T> entityList = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+
+        try {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i< args.length; i++) {
+                preparedStatement.setObject(i+1, args[i]);
+            }
+            rs = preparedStatement.executeQuery();
+            List<Map<String, Object>> mapList = new ArrayList<>();
+            while (rs.next()) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                for (int i = 0; i<rs.getMetaData().getColumnCount(); i ++) {
+                    String columnLabel = rs.getMetaData().getColumnLabel(i+1);
+                    Object value = rs.getObject(columnLabel);
+                    map.put(columnLabel, value);
+                }
+                mapList.add(map);
+            }
+            System.out.println(mapList.size());
+            T entity = clazz.newInstance();
+            for (int i = 0; i < mapList.size(); i++) {
+//                ReflectionUtils.setFieldValue(entity, et.getKey(), et.getValue().toString());
+                for (Map.Entry<String, Object> temMap : mapList.get(i).entrySet()) {
+                    BeanUtils.setProperty(entity, temMap.getKey(), temMap.getValue());
+                }
+                entityList.add(entity);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            release(rs,preparedStatement, connection);
+        }
+        return entityList;
+    }
+
+
+
     /**
      * OlderVersion
      */

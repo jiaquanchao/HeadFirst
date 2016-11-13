@@ -1,0 +1,58 @@
+class 的属性
+
+1、在java EE 中属性是用get和set方法来定义的（也就是getter和setter）。
+    去掉get和set然后首字母小写就称为类的属性
+
+2、以前所说的属性一般指的是成员变量。
+
+
+
+1. DAO : Data Access Object
+
+why：实现功能的模块化，利于代码维护升级。
+
+what：访问数据信息的类，包含增删改查：CRUD
+不包含业务信息
+
+method：使用JDBC编写DAO可能的方法（可以被子类继承或使用）
+
+    void update(String sql, Object ... args)
+
+    void delete(String sql)
+
+    <T> T get(Class<T> clazz, String sql, Object ... args)
+
+    <T> List<T> getForList(Class<T> clazz, String sql, Object ... args)
+
+    //返回某一个字段的值，或一个统计值。
+    <E> E getForValue(String sql, Object ... args)
+
+
+    public class DAO {
+
+        public void update(String sql, Object ... args) {
+
+        }
+
+        public void delete(String sql) {
+
+        }
+
+        public <T> T get(Class<T> clazz, String sql, Object ... args) {
+
+
+            return null;
+        }
+
+        public <T> List<T> getForList(Class<T> clazz, String sql, Object ... args) {
+
+            return null;
+        }
+
+        //返回某一个字段的值，或一个统计值。
+        public <E> E getForValue(String sql, Object ... args) {
+
+            return null;
+        }
+    }
+

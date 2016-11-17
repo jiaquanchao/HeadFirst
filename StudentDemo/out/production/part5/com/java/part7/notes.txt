@@ -1,0 +1,42 @@
+本章跳过了时间类，日历类
+
+正则表达式较为重要，看表达式的小册子学习一下
+
+格式化比较重要，周末总结一下
+SimpleDateFormat m = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒")
+SimpleDateFormat myFmt4=new SimpleDateFormat(
+                 "一年中的第 D 天 一年中第w个星期 一月中第W个星期 在一天中k时 z时区");
+//类似于这样的写法，把对应的代码写上，其他的组成句子就可以了
+/**
+   SimpleDateFormat函数语法：
+
+   G 年代标志符
+   y 年
+   M 月
+   d 日
+   h 时 在上午或下午 (1~12)
+   H 时 在一天中 (0~23)
+   m 分
+   s 秒
+   S 毫秒
+   E 星期
+   D 一年中的第几天
+   F 一月中第几个星期几
+   w 一年中第几个星期
+   W 一月中第几个星期
+   a 上午 / 下午 标记符
+   k 时 在一天中 (1~24)
+   K 时 在上午或下午 (0~11)
+   z 时区
+*/
+
+在java中取得当前的系统时间并且转化成自己想要的格式
+
+     需要引进 java.util.Calendar 和 java.text.SimpleDateFormat 这两个类:
+
+        Calendar rightNow = Calendar.getInstance();
+         SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMddhhmmss");
+         String sysDatetime = fmt.format(rightNow.getTime());
+
+    可以对 new SimpleDateFormat("yyyyMMddhhmmss") 中引号里面的格式进行编辑,转换成自己相要的格式,比如还可以转
+    换成    new    SimpleDateFormat("yyyy/MM/dd    hh:mm:ss    ") 的格式。

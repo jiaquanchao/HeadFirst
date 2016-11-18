@@ -1,0 +1,20 @@
+public class ArrayToCollection {
+
+    public <T> void trans(T[] t, Collection<T> c) {
+        for (T tin :
+            t) {
+            c.add(t);
+        }
+
+        for(T tin:
+            c) {
+            System.out.println(tin);
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] ints = {1, 2, 3, 4}
+
+        ArrayToCollection atc = Class.forName("ArrayToCollection").newInstance
+    }
+}

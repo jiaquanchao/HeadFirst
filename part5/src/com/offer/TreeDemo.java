@@ -7,71 +7,54 @@ public class TreeDemo {
 
     public static class TreeNode<T>{
         T val = null;
-        TreeNode<T> left = new TreeNode<>();
-        TreeNode<T> right = new TreeNode<>();
-
-        public TreeNode(T val, TreeNode<T> left, TreeNode<T> right) {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public TreeNode() {
-        }
-
-        public TreeNode<T> getLeft() {
-            return left;
-        }
-
-        public TreeNode<T> getRight() {
-            return right;
-        }
-
-        public T getVal() {
-            return val;
-        }
-
-        public void setVal(T val) {
-            this.val = val;
-        }
-
-        public void setLeft(TreeNode<T> left) {
-            this.left = left;
-        }
-
-        public void setRight(TreeNode<T> right) {
-            this.right = right;
-        }
+        TreeNode<T> left;
+        TreeNode<T> right;
     }
 
-    public <T> TreeNode<T> findNode(T[] s, T[] z) {
+    public static <T> TreeNode<T> findNode(T[] s, T[] z) {
+
+        if(s == null || z == null || s.length != z.length || s.length < 1) {
+            return null;
+        }
+        return findNode(s, 0, s.length-1, z, 0, z.length-1);
+    }
+
+    public static <T> TreeNode<T> findNode(T[] s, int startS, int stopS, T[] z, int startZ, int stopZ) {
+        if(startS > stopS) {
+            return null;
+        }
+
         TreeNode<T> root = new TreeNode<>();
-
-        root.setVal(s[0]);
-
-        TreeNode<T> beforeN = new TreeNode<>();
-        TreeNode<T> temN = new TreeNode<>();
-        TreeNode<T> afterN = new TreeNode<>();
-        int numL;
-        int numR;
+        root.val = s[startS];
         int flag = 0;
-        // flag is left's length and right's - 1
-        for (int i = 0; i < z.length; i++) {
-            if (z[i] == s[0]) {
+        for (int i = startZ; i <= stopZ; i++) {
+            if (z[i].equals(s[startS])) {
                 flag = i;
                 break;
             }
         }
-        numL = ((int)flag/2)+1;
-        numR = ((int)(s.length-flag-1))+1;
-        beforeN = root;
-        for (int i = 0; i < numL; i++) {
-            temN.setVal(s[--flag]);
-            beforeN.left = temN;
-            temN.left = afterN
+        //左向
+        root.left = findNode(s, startS+1, startS + flag - startZ, z, startZ, flag - 1);
+        //右向
+        root.right = findNode(s, startS + flag - startZ + 1, stopS, z, flag + 1, stopZ);
 
+        return root;
+    }
+
+    //foreach
+    public static <T> void printTree(TreeNode<T> tree) {
+        if (tree!=null) {
+            printTree(tree.left);
+            System.out.print(tree.val+" ");
+            printTree(tree.right);
         }
+    }
 
 
+    public static void main(String[] args) {
+        Integer[] preorder = {1, 2, 4, 7, 3, 5, 6, 8};
+        Integer[] inorder = {4, 7, 2, 1, 5, 3, 8, 6};
+        TreeNode<Integer> root = findNode(preorder, inorder);
+        printTree(root);
     }
 }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="Oracle - @192.168.0.210" uuid="8303341f-e614-482a-8636-9bd72b6dad8e">
+      <secret-storage>master_key</secret-storage>
+      <user-name>ATLASCOPCO_TOOLSNET</user-name>
+      <schema-pattern>*.ATLASCOPCO_TOOLSNET *.PUBLIC *.SYS *.SYSTEM</schema-pattern>
+      <default-schemas>*.ATLASCOPCO_TOOLSNET *.PUBLIC</default-schemas>
+    </data-source>
+  </component>
+</project>

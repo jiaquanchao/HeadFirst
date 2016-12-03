@@ -11,22 +11,33 @@ public class QueueSimulation {
 		private Deque<T> deque = new ArrayDeque<>();
 		
 		public void appendTail(T t) {
-			deque.push(t);
+			dequeAdd.push(t);
 		}
 		
 		public void deleteHead() {
+
+			if()
+			while(!dequeAdd.isEmpty()) {
+				System.out.println(dequeAdd.pollFirst().toString());
+			}
 			dequeAdd = deque;
+			deque.clear();
 			while(!dequeAdd.isEmpty()) {
 				dequeDel.push(dequeAdd.pollFirst());
 			}
-			System.out.println(dequeDel.pollFirst().toString());
-			dequeAdd = null;
+			dequeAdd.clear();
+			while(!dequeDel.isEmpty()) {
+				System.out.println(dequeDel.pollFirst().toString());
+			}
 			while(!dequeDel.isEmpty()) {
 				dequeAdd.push(dequeDel.pollFirst());
 			}
+			while(!dequeAdd.isEmpty()) {
+				System.out.println(dequeAdd.pollFirst().toString());
+			}
 			deque = dequeAdd;
-			dequeAdd = null;
-			dequeDel = null;
+			dequeAdd.clear();
+			dequeDel.clear();
 		}
 		
 		public void getContext() {
@@ -37,8 +48,8 @@ public class QueueSimulation {
 			while(!dequeDel.isEmpty()) {
 				System.out.println(dequeDel.pollFirst().toString());
 			}
-			dequeAdd = null;
-			dequeDel = null;
+			dequeAdd.clear();
+			dequeDel.clear();
 		}
 				
 	}
@@ -50,7 +61,7 @@ public class QueueSimulation {
 		s.appendTail("3");
 		s.appendTail("4");
 		s.appendTail("5");
-		s.getContext();
+//		s.getContext();
 		System.out.println("______________");
 		s.deleteHead();
 		System.out.println("______________");

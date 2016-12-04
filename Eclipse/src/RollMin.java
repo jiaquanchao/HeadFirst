@@ -43,7 +43,7 @@ public class RollMin {
 	
 	public static void main(String[] args) {
 		int[] ints = new int[]{3,4,5, 6, 7,1, 1, 1, 1,2};
-		int[] ints1 = new int[]{5, 2, 3,4};
+//		int[] ints1 = new int[]{5, 2, 3,4};
 		System.out.println(findMin(ints));
 	}
 

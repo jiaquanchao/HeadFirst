@@ -45,7 +45,6 @@ public class ReadB {
         InputStream inputStreamT = blobT.getBinaryStream();
         InputStream inputStreamA = blobA.getBinaryStream();
         Writer writer = new OutputStreamWriter(new FileOutputStream(file, true));
-//        writer.write("ResultId,ProcessTorque,ProcessAngle\n");
         byte[] bytesT = new byte[4];
         byte[] bytesA = new byte[4];
         while ((inputStreamT.read(bytesT) != -1) && (inputStreamA.read(bytesA) != -1)) {

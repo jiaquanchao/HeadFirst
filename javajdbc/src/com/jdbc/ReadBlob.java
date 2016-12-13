@@ -11,16 +11,16 @@ import java.sql.Statement;
  */
 public class ReadBlob {
 
-    public static void main(String[] args) throws Exception {
+    public static void read(int unitid, int normal, int num, String path) throws Exception {
 
         ReadB readB = (ReadB) Class.forName("com.jdbc.ReadB").newInstance();
-        String filePath = "D:\\WCData\\ReadBlob\\";
+        String filePath = path; //"D:\\WCData\\ReadBlob\\";
         String sql = "SELECT a.ResultID,a.UnitID,a.ResultType,a.ProcessTorque,g.\"GraphValues\"ProcessAngle\n" +
                 "FROM (SELECT  r.\"ID\"ResultID,u.\"ID\"UnitID,r.\"ResultStatusTypeID\"ResultType,g.\"GraphValues\"ProcessTorque\n" +
                 "FROM \"Result\"  r JOIN  \"Unit\" u ON r.\"UnitID\" = u.ID\n" +
                 "  JOIN \"Graph\"  g ON  r.ID= g.\"ResultID\"\n" +
-                "WHERE r.\"UnitID\"=16506 AND r.\"ResultStatusTypeID\"='0 'AND g.\"GraphTypeID\"= -1)a JOIN \"Graph\" g ON  a.ResultID= g.\"ResultID\"\n" +
-                "  WHERE g.\"GraphTypeID\"= -2 ";
+                "WHERE r.\"UnitID\"="+unitid+" AND r.\"ResultStatusTypeID\"='0 'AND g.\"GraphTypeID\"= -1)a JOIN \"Graph\" g ON  a.ResultID= g.\"ResultID\"\n" +
+                "  WHERE g.\"GraphTypeID\"= " + normal;
         Connection conn = null;
         Statement stat = null;
         ResultSet rs = null;
@@ -30,13 +30,15 @@ public class ReadBlob {
             stat = conn.createStatement();
             rs = stat.executeQuery(sql);
 
-            File file = new File(filePath+"16506_OK.csv");
-            while (rs.next()) {
+            File file = new File(filePath+unitid+"_OK.csv");
+            int count_i = 0;
+            while (rs.next() && count_i <= num) {
                 long resultId = rs.getLong("ResultId");
                 int unitId = rs.getInt("UnitId");
                 Blob ftP = rs.getBlob("ProcessTorque");
                 Blob faP = rs.getBlob("ProcessAngle");
                 readB.readB(resultId, ftP, faP, file);
+                count_i++;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,5 +47,9 @@ public class ReadBlob {
         }
     }
 
+    @org.junit.Test
+    public void test() throws Exception {
+        read(16506, -2, 10, "D:\\WCData\\");
+    }
 
 }

@@ -2,28 +2,64 @@ package offer;
 
 import java.util.Arrays;
 
+import org.junit.Test;
+
 public class PrintOneToMax {
 
 	public static void printNumber(int n) {
 		int[] arr = new int[n];
-//		createNumber(0, arr);
+		createNumber(0, arr);
 	}
 	
-//	public static int createNumber(int n, int[] arr) {
-//		if(n >= arr.length) {
-//			printArr(arr);
-//		}
-//		for(int i = 0; i <= 9; i++) {
-//			
-//		}
-//	}
-//	
+	public static void createNumber(int n, int[] arr) {
+		if(n >= arr.length) {
+			printArr(arr);
+		} else {
+			for(int i = 0; i <= 9; i++) {
+				arr[n] = i;
+				createNumber(n+1, arr);
+			}
+		}
+	}
+	
 	public static void printArr(int[] arr) {
-		System.out.println(Arrays.toString(arr));
+		int n = 0;
+		while(n < arr.length && arr[n]==0) {
+			n++;
+		}
+		for(int i = n; i < arr.length; i++){
+			System.out.print(arr[i]);
+		}
+		System.out.println();
+	}
+	
+	@Test
+	public void test() {
+		// TODO Auto-generated method stub
+		printNumber(2);
 	}
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * 
+	 * @param n
+	 */
 	public static void printOneToNthDigits(int n) {  
         // 输入的数字不能为小于1  
         if (n < 1) {  

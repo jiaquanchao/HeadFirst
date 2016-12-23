@@ -5,6 +5,8 @@ import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jax on 2016/11/5.
@@ -15,6 +17,7 @@ public class ReadBlob {
 
         ReadB readB = (ReadB) Class.forName("com.jdbc.ReadB").newInstance();
         String filePath = path; //"D:\\WCData\\ReadBlob\\";
+        String sqlGetUnitID = "\"SELECT \"ID\" FROM \"Unit\"";
         String sql = "SELECT a.ResultID,a.UnitID,a.ResultType,a.ProcessTorque,g.\"GraphValues\"ProcessAngle\n" +
                 "FROM (SELECT  r.\"ID\"ResultID,u.\"ID\"UnitID,r.\"ResultStatusTypeID\"ResultType,g.\"GraphValues\"ProcessTorque\n" +
                 "FROM \"Result\"  r JOIN  \"Unit\" u ON r.\"UnitID\" = u.ID\n" +
@@ -24,11 +27,17 @@ public class ReadBlob {
         Connection conn = null;
         Statement stat = null;
         ResultSet rs = null;
+        List<Integer> UnitID = new ArrayList<>();
 
         try {
             conn = JBDCTools.getConnection();
             stat = conn.createStatement();
-            rs = stat.executeQuery(sql);
+            rs = stat.executeQuery(sqlGetUnitID);
+            while (rs.next()) {
+                UnitID.add(rs.getInt("ID"));
+            }
+
+
 
             File file = new File(filePath+unitid+"_OK.csv");
             int count_i = 0;

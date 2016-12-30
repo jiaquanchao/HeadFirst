@@ -5,19 +5,15 @@ import org.junit.Test;
 public class Fibo {
 	
 	public static void f(int n) {
-		int[] res = new int[n];
-		if (n <= 2) {
-			System.out.println(1);
-		}
-		Long first = 1L;
-		Long second = 1L;
+		Long[] res = new Long[n];
+		res[0] = 1L;
+		res[1] = 1L;
 		int i = 2;
-		while(i++ < n) {
-			Long tem = first + second;
-			first = second;
-			second = tem;
+		while(i < n) {
+			res[i] = res[i-1] + res[i-2];
+			i ++;
 		}
-		System.out.println(second);
+		System.out.println(res[n-1]);
 		
 	}
 	
